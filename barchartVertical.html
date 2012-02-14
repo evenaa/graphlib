@@ -1,0 +1,277 @@
+<!doctype html>
+    <head>  
+        <meta charset="utf-8" />
+        <title>Canvastesting</title>  
+        <script type="text/javascript" src="BarCharts.js"></script>
+        <script type="text/javascript">
+
+            document.createElement('header');
+            document.createElement('hgroup');
+            document.createElement('nav');
+            document.createElement('menu');
+            document.createElement('section');
+            document.createElement('article');
+            document.createElement('aside');
+            document.createElement('footer');
+            document.createElement('canvas');
+
+
+            //var barVertical = new BarVertical();
+            //barVertical.bredde = 100;
+            
+
+            function draw(){  
+                var canvas = document.getElementById('tutorial');
+                if (canvas.getContext){  
+                    var ctx = canvas.getContext('2d');
+                    var gutterX = 80; //130;
+                    var graphMarginX = 20;
+                    var gutterY = 0;
+                    var graphMarginY = 50; // title height
+                    var labelMarginY = 15;
+                    var graphWidth = 430;
+                    var graphHeight = 500;
+
+                    var barHeight = 25;
+                    var barWidth = 5;
+                    var barMargin = 5;
+
+                    var numYmarks = 20;
+                    var numXmarks = 20;
+                    var labelWidthX = Math.floor((graphWidth/numXmarks));
+                    var labelWidthY = Math.floor((graphHeight/numYmarks));
+                
+                    /* Input variables */
+                    var labelTextY = [];//["Lada", "Saab", "Pysschå", "Rennå", "Volkswagen", "Opel"];
+                    var labelTextX = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];//["Lada", "Saab", "Pysschå", "Rennå", "Volkswagen", "Opel"];
+                    //var serieValues = [200, 48, 200, 75, 200, 200, 48, 200, 75, 200, 200, 48, 200, 75, 200, 200, 48, 200, 75];
+        // TODO: Compute distance between x- and y-axis marks based on labelarray if given (else first point is 0 and numbers total is numX/Ymarks + 1)
+
+                    var serieValues = [1,3,1,2,7,1,2,1,1,2,5,1,1,1,1,1,2,3,1,1];
+                    var chartTitle = "1-20 single hit";
+
+
+                    /* Reset canvas */
+                    canvas.width = canvas.width;
+
+                    var maxValue = 0;
+                    var maxValueInput = 0;
+                    for (i = 0; i < serieValues.length; i++) {
+                        if (serieValues[i] > maxValue) {
+                            maxValue = serieValues[i]; 
+                        }
+                    }
+                    if (maxValueInput > 0) {
+                        maxValue = maxValueInput;
+                    }
+               
+                    if (maxValue < numYmarks) {
+                        labelWidthY = Math.floor((graphHeight/maxValue));
+                        numYmarks = maxValue;
+                    }
+
+ 
+/* Draw title */
+                ctx.font = '16px Times New Roman serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(chartTitle, (canvas.width/2), (gutterY + graphMarginY - 20), 500); 
+
+/* Draw axis */
+                // Y-axis
+                ctx.beginPath();
+                ctx.moveTo((gutterX + graphMarginX - 5), (gutterY + graphMarginY - 2));
+                ctx.lineTo((gutterX + graphMarginX - 5), (gutterY + graphMarginY + graphHeight + 2));
+
+                /* Y-axis marks */
+                for (i = 0; i < numYmarks + 1; i++) {
+                    ctx.moveTo((gutterX + graphMarginX - 6), (gutterY + graphMarginY + graphHeight - i*labelWidthY - 1));
+                    ctx.lineTo((gutterX + graphMarginX - 6 - 2), (gutterY + graphMarginY + graphHeight - i*labelWidthY - 1));
+                }
+                
+                ctx.strokeStyle = '#000';
+                ctx.stroke();
+                ctx.closePath();
+
+
+                // X-axis
+                ctx.beginPath();
+                ctx.moveTo((gutterX + graphMarginX - 5), (gutterY + graphMarginY + graphHeight + 1));
+                ctx.lineTo((gutterX + graphMarginX - 5 + graphWidth + 20), (gutterY + graphMarginY + graphHeight + 1));
+                
+                /* X-axis marks */
+                var marksTmp = labelTextX.length > 0 ? numXmarks : numXmarks + 1;
+                for (i = 0; i < marksTmp; i++) {
+                    ctx.moveTo((gutterX + graphMarginX + i*labelWidthX), (gutterY + graphMarginY + graphHeight + 2));
+                    ctx.lineTo((gutterX + graphMarginX + i*labelWidthX), (gutterY + graphMarginY + graphHeight + 4));
+                }
+                
+                ctx.strokeStyle = '#000';
+                ctx.stroke();
+                ctx.closePath();
+
+                
+                /* Vertical lines */
+                /*ctx.beginPath();
+                for (i = 0; i < 21; i++) {
+                    ctx.moveTo((gutterX + graphMarginX + i*labelWidthX/2), (gutterY + graphMarginY - 2));
+                    ctx.lineTo((gutterX + graphMarginX + i*labelWidthX/2), (gutterY + graphMarginY + graphHeight));
+                }
+                //ctx.strokeStyle = '#EEE';
+                ctx.strokeStyle = '#DDD';
+                ctx.stroke();
+                cx.closePath();*/
+                
+                /* Horizontal lines */
+                ctx.beginPath();
+                for (i = 0; i < numYmarks + 1; i++) {
+                    ctx.moveTo((gutterX + graphMarginX - 0), (gutterY + graphMarginY - 1 + graphHeight - i*labelWidthY));
+                    ctx.lineTo((gutterX + graphMarginX + 5 + graphWidth), (gutterY + graphMarginY - 1 + graphHeight - i*labelWidthY));
+                }
+                //ctx.strokeStyle = '#EEE';
+                ctx.strokeStyle = '#DDD';
+                ctx.stroke();
+                ctx.closePath();
+                
+                /* Reset position of ctx to origo */
+                ctx.moveTo(0,0);
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = '#000';
+
+
+/* Draw labels X-axis */
+                ctx.font = '10px Verdana sans-serif';
+                if (labelTextX.length > 0) {
+                    ctx.textAlign = 'right';
+                    for (i = 0; i < labelTextX.length; i++) {
+                        ctx.fillText(labelTextX[i], gutterX + graphMarginX + i*labelWidthX + 5, (gutterY + graphMarginY + graphHeight + 1 + 15)); 
+                    }
+
+                } else { 
+                    ctx.textAlign = 'center';
+                    for (i = 0; i < numXmarks + 1; i++) {
+                        ctx.fillText(i*(Math.ceil(maxValue/numXmarks)) + "", (gutterX + graphMarginX + i*labelWidthX + 1), (gutterY + graphMarginY + graphHeight + 1 + 15));
+                    }
+                }
+
+
+
+/* Draw labels Y-axis */
+                ctx.font = '12px Verdana sans-serif';
+                ctx.textAlign = 'right';
+                if (labelTextY.length > 0) {
+                    for (i = 0; i < labelTextY.length; i++) {
+                        ctx.fillText(labelTextY[i], gutterX, (gutterY + graphMarginY + labelMarginY + i*(barHeight + barMargin))); 
+                    }
+                } else {
+                    ctx.textAlign = 'center';
+                    for (i = 0; i < numYmarks + 1; i++) {
+                        //console.debug(i*(Math.ceil(maxValue/numYmarks)));
+                        ctx.fillText(i*(Math.ceil(maxValue/numYmarks)) + "", (gutterX + graphMarginX - graphMarginX - 5), (gutterY + graphMarginY + graphHeight - i*labelWidthY + 4));
+                    }
+                }
+                
+              
+/* Draw bars */ 
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
+                ctx.shadowBlur    = 4;
+                
+                var graphOverflow = "gradient";
+                //ctx.fillStyle = "#000080";
+                for (i = 0; i < serieValues.length; i++) {
+                    if (serieValues[i] > maxValue && graphOverflow == "gradient") {
+                        ctx.fillStyle = "#000080";
+                        ctx.shadowColor   = 'rgba(0, 0, 128, 0.5)'; 
+                        ctx.fillRect (gutterX + graphMarginX, (gutterY + graphMarginY) + i*(barHeight + barMargin),  graphWidth, barHeight);
+
+                        //var grad1 = ctx.createLinearGradient(gutterX + graphMarginX + graphWidth, (gutterY + graphMarginY), 20, barHeight);
+                        //var grad1 = ctx.createLinearGradient(0, 0, 20, 0);
+                        var grad1 = ctx.createLinearGradient((gutterX + graphMarginX + graphWidth), barHeight, (gutterX + graphMarginX + graphWidth + 30), barHeight);
+                        grad1.addColorStop(0, '#000080');
+                        //grad1.addColorStop(0.2, '#000080');
+                        grad1.addColorStop(1, '#fff');
+                        ctx.fillStyle = grad1;
+                        ctx.shadowColor   = 'rgba(0, 0, 128, 0)'; 
+                        ctx.fillRect(gutterX + graphMarginX + graphWidth, (gutterY + graphMarginY) + i*(barHeight + barMargin), 30, barHeight);
+                        var graphOverflow = "zigzag";
+                    } else if (serieValues[i] > maxValue && (graphOverflow == "zigzag" || graphOverflow == "zigzagGradient")) {
+                        ctx.fillRect (gutterX + graphMarginX, (gutterY + graphMarginY) + i*(barHeight + barMargin),  graphWidth, barHeight);
+                        ctx.beginPath();
+                        ctx.moveTo((gutterX + graphMarginX + graphWidth), (gutterY + graphMarginY) + i*(barHeight + barMargin));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 20), (gutterY + graphMarginY) + i*(barHeight + barMargin));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 30), (gutterY + graphMarginY) + i*(barHeight + barMargin) + barHeight * 0.15);
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 20), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 0.25));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 30), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 0.5));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 20), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 0.75));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 30), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 1 - barHeight * 0.15));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 20), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 1));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth), (gutterY + graphMarginY) + i*(barHeight + barMargin));
+
+                        if (graphOverflow == "zigzag") {
+                            ctx.fillStyle = "#000080";
+                            var graphOverflow = "zigzagGradient";
+                        } else {
+                            ctx.fillStyle = grad1;
+                            var graphOverflow = "zigzagGap";
+                        }
+                        ctx.fill();
+                        ctx.closePath();
+                    } else if (serieValues[i] > maxValue && graphOverflow == "zigzagGap") {
+                        ctx.fillStyle = "#000080";
+                        ctx.fillRect (gutterX + graphMarginX, (gutterY + graphMarginY) + i*(barHeight + barMargin),  graphWidth, barHeight);
+
+                        /* Left gap */
+                        ctx.beginPath();
+                        ctx.moveTo((gutterX + graphMarginX + graphWidth), (gutterY + graphMarginY) + i*(barHeight + barMargin));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 5), (gutterY + graphMarginY) + i*(barHeight + barMargin));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 15), (gutterY + graphMarginY) + i*(barHeight + barMargin));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 10), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 0.25));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 15), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 0.5));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 10), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 0.75));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 15), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 1));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 5), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 1));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth), (gutterY + graphMarginY) + i*(barHeight + barMargin));
+                        ctx.fill();
+                        ctx.closePath();
+                        
+                        /* Right gap  */
+                        ctx.beginPath();
+                        ctx.moveTo((gutterX + graphMarginX + graphWidth + 23), (gutterY + graphMarginY) + i*(barHeight + barMargin));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 18), (gutterY + graphMarginY) + i*(barHeight + barMargin));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 13), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 0.25));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 18), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 0.5));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 13), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 0.75));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 18), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 1));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 23), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 23), (gutterY + graphMarginY + i*(barHeight + barMargin) + barHeight * 1));
+                        ctx.lineTo((gutterX + graphMarginX + graphWidth + 23), (gutterY + graphMarginY + i*(barHeight + barMargin)));
+                        ctx.fill();
+                        ctx.closePath();
+                    
+                    } else {
+                        ctx.fillStyle = "#000080";
+                        //ctx.shadowColor   = 'rgba(0, 0, 128, 0.5)';
+                        //console.debug((serieValues[i]/maxValue) * graphHeight); 
+                        ctx.fillRect (gutterX + graphMarginX - 2 + i*(labelWidthX), (gutterY + graphMarginY + graphHeight), barWidth,-(serieValues[i] * labelWidthY + 2)); //-(serieValues[i] / maxValue) * graphHeight);
+                    }
+                    //ctx.fillStyle = "#000080";
+                }
+
+                //ctx.fillStyle = "rgba(0, 0, 200, 0.10)";  
+                //ctx.fillRect (30, 30, 55, 50); 
+
+            }  
+          }  
+        </script>  
+        <style type="text/css">  
+          canvas { border: 1px solid black; }  
+        </style>  
+      </head>  
+      <body onload="draw();">  
+        <canvas id="tutorial" width="600" height="600">No canvas support</canvas>  
+    </body>  
+</html>  

@@ -1,0 +1,144 @@
+<!doctype html>
+    <head>  
+        <meta charset="utf-8" />
+        <title>Canvastesting</title>  
+        <script type="text/javascript" src="BarCharts.js"></script>
+        <script type="text/javascript">
+
+            document.createElement('header');
+            document.createElement('hgroup');
+            document.createElement('nav');
+            document.createElement('menu');
+            document.createElement('section');
+            document.createElement('article');
+            document.createElement('aside');
+            document.createElement('footer');
+            document.createElement('canvas');
+
+
+            //var barVertical = new BarVertical();
+            //barVertical.bredde = 100;
+            
+
+            function draw(){  
+                var canvas = document.getElementById('tutorial');
+                if (canvas.getContext){  
+                    var ctx = canvas.getContext('2d');
+                    var gutterX = 80; //130;
+                    var graphMarginX = 20;
+                    var gutterY = 0;
+                    var graphMarginY = 50; // title height
+                    var labelMarginY = 15;
+                    var graphWidth = 430;
+                    var graphHeight = 500;
+                    var radius = 150;
+                    var barHeight = 25;
+                    var barWidth = 5;
+                    var barMargin = 5;
+
+                    var numYmarks = 20;
+                    var numXmarks = 20;
+                    var labelWidthX = Math.floor((graphWidth/numXmarks));
+                    var labelWidthY = Math.floor((graphHeight/numYmarks));
+                
+                    /* Input variables */
+                    var labelTextY = [];//["Lada", "Saab", "Pysschå", "Rennå", "Volkswagen", "Opel"];
+                    var labelTextX = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];//["Lada", "Saab", "Pysschå", "Rennå", "Volkswagen", "Opel"];
+                    //var serieValues = [200, 48, 200, 75, 200, 200, 48, 200, 75, 200, 200, 48, 200, 75, 200, 200, 48, 200, 75];
+        // TODO: Compute distance between x- and y-axis marks based on labelarray if given (else first point is 0 and numbers total is numX/Ymarks + 1)
+
+                    var serieValues = [100,100,200,250,350];
+                    var serieLegend = [["< 60", "≥ 60 < 80", "≥ 80 < 120", "≥ 120 < 140", "≥ 140"],["","","","",""]];
+                    var chartTitle = "10 x 3";
+
+
+                    /* Reset canvas */
+                    canvas.width = canvas.width;
+
+                    var maxValue = 0;
+                    var maxValueInput = 0;
+                    var sum = 0;
+                    for (i = 0; i < serieValues.length; i++) {
+                        sum += serieValues[i];
+                        if (serieValues[i] > maxValue) {
+                            maxValue = serieValues[i]; 
+                        }
+                    }
+                    if (maxValueInput > 0) {
+                        maxValue = maxValueInput;
+                    }
+               
+                    if (maxValue < numYmarks) {
+                        labelWidthY = Math.floor((graphHeight/maxValue));
+                        numYmarks = maxValue;
+                    }
+
+ 
+/* Draw title */
+                ctx.font = '16px Times New Roman serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(chartTitle, (canvas.width/2), (gutterY + graphMarginY - 20), 500);
+
+                var startAngle = 0;
+                for (i = 0; i < serieValues.length; i++) {
+                    var endAngle = startAngle + (parseInt(serieValues[i]) * 2*Math.PI)/(sum);
+                    console.debug("endAngle: " + endAngle);
+                    var fillStyle = "#95B5" + (i * 2 % 10) + (i+1%10) + "";
+                    serieLegend[1][i] = fillStyle;
+                    ctx.fillStyle = fillStyle;
+
+                    ctx.beginPath();
+                    ctx.strokeStyle = "#fff";
+                    ctx.moveTo(250, 250);
+                    ctx.arc(250, 250, radius, startAngle, endAngle, false); // true = counter clockwise
+                    ctx.lineTo(250, 250);
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.fill();
+
+                    startAngle = endAngle;
+                }
+
+                for (i = 0; i < serieLegend[0].length; i++) {
+                    ctx.fillStyle = serieLegend[1][i];
+                    ctx.fillRect(gutterX + graphMarginX + 300 + 25, gutterY + graphMarginY + 150 + i*30, 10, 10); 
+                    ctx.textAlign = 'left';
+                    ctx.fillText(serieLegend[0][i], gutterX + graphMarginX + 300 + 50, gutterY + graphMarginY + 150 + 10 + i*30, serieLegend[0][i].length * 10);
+                }
+
+                /*ctx.fillStyle = "#95B524";
+                ctx.beginPath();
+                ctx.strokeStyle = "#fff";
+                ctx.moveTo(250, 250);
+                ctx.arc(250, 250, 200, Math.PI/4, 0, true); // true = counter clockwise
+                ctx.lineTo(250, 250);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.fill();
+
+                ctx.fillStyle = "#f00";
+                ctx.beginPath();
+                ctx.strokeStyle = "#fff";
+                ctx.moveTo(250, 250);
+                ctx.arc(250, 250, 200, 3*Math.PI/2, Math.PI, true); // true = counter clockwise
+                ctx.lineTo(250, 250);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.fill();
+                /*ctx.moveTo(250, 250);
+                ctx.arc(250, 250, 200, 3*Math.PI/2, Math.PI, true); // true = counter clockwise
+                ctx.lineTo(250, 250);
+                //ctx.stroke();
+                ctx.fillStyle = 'rgb(200, 0, 0)';
+                ctx.fill();*/
+                }
+            }  
+        </script>  
+        <style type="text/css">  
+          canvas { border: 1px solid black; }  
+        </style>  
+      </head>  
+      <body onload="draw();">  
+        <canvas id="tutorial" width="600" height="600">No canvas support</canvas>  
+    </body>  
+</html>  
